@@ -1,0 +1,5 @@
+name: FactionsFlight
+main: com.gmail.snowmanam2.factionsflight.FactionsFlight
+version: 0.0.1
+author: snowman_am2
+depends: [Factions]
