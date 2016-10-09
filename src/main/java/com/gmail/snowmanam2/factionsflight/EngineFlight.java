@@ -13,6 +13,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import com.massivecraft.factions.entity.BoardColl;
 import com.massivecraft.factions.entity.Faction;
@@ -35,7 +36,7 @@ public class EngineFlight {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onPlayerMoveEvent(PlayerMoveEvent event) {
 		Location from = event.getFrom();
 		Location to = event.getTo();
@@ -51,8 +52,13 @@ public class EngineFlight {
 		moved = moved || Math.abs(from.getBlockZ()>>4 - to.getBlockZ()>>4) > 0;
 		
 		if (moved) {
-			updatePlayerFlightStatus(player);
+			updatePlayerFlightStatus(player, to);
 		}
+	}
+	
+	@EventHandler
+	public void onPlayerTeleport(PlayerTeleportEvent event) {
+		updatePlayerFlightStatus(event.getPlayer(), event.getTo());
 	}
 	
 	@EventHandler
@@ -74,7 +80,10 @@ public class EngineFlight {
 	}
 	
 	public void updatePlayerFlightStatus (Player player) {
-		Location location = player.getLocation();
+		updatePlayerFlightStatus(player, player.getLocation());
+	}
+	
+	public void updatePlayerFlightStatus (Player player, Location location) {
 		PS psChunk = PS.valueOf(location.getWorld().getName(), location.getBlockX()>>4, location.getBlockX()>>4);
 		Faction faction = BoardColl.get().getFactionAt(psChunk);
 		MPlayer mplayer = MPlayer.get(player);
