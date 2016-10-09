@@ -1,4 +1,4 @@
-package com.gmail.snowmanam2.factionsflight.FactionsFlight;
+package com.gmail.snowmanam2.factionsflight;
 
 import java.util.HashSet;
 import java.util.Set;

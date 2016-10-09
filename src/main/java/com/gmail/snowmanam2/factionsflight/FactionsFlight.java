@@ -1,4 +1,4 @@
-package com.gmail.snowmanam2.factionsflight.FactionsFlight;
+package com.gmail.snowmanam2.factionsflight;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

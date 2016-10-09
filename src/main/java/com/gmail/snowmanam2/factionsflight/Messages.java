@@ -1,4 +1,4 @@
-package com.gmail.snowmanam2.factionsflight.FactionsFlight;
+package com.gmail.snowmanam2.factionsflight;
 
 import java.io.File;
 import java.io.IOException;
