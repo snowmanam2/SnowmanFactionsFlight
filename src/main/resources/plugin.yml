@@ -2,4 +2,8 @@ name: FactionsFlight
 main: com.gmail.snowmanam2.factionsflight.FactionsFlight
 version: 0.0.1
 author: snowman_am2
-depends: [Factions]
+depend: [Factions]
+permissions:
+  factionsflight.bypass:
+    description: "Bypass FactionsFlight"
+    default: false
