@@ -22,6 +22,9 @@ import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.MPerm;
 import com.massivecraft.factions.entity.MPlayer;
 import com.massivecraft.factions.event.EventFactionsChunksChange;
+import com.massivecraft.factions.event.EventFactionsDisband;
+import com.massivecraft.factions.event.EventFactionsRankChange;
+import com.massivecraft.factions.event.EventFactionsRelationChange;
 import com.massivecraft.massivecore.ps.PS;
 import com.massivecraft.massivecore.util.MUtil;
 
@@ -38,9 +41,22 @@ public class EngineFlight implements Listener {
 	
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void factionsChunksChange(EventFactionsChunksChange e) {
-		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-			updatePlayerFlightStatus(player);
-		}
+		updateAllPlayersFlightStatus();
+	}
+	
+	@EventHandler
+	public void factionsDisband(EventFactionsDisband e) {
+		updateAllPlayersFlightStatus();
+	}
+	
+	@EventHandler
+	public void factionsRelationChange(EventFactionsRelationChange e) {
+		updateAllPlayersFlightStatus();
+	}
+	
+	@EventHandler
+	public void factionsRankChange(EventFactionsRankChange e) {
+		updatePlayerFlightStatus(e.getMPlayer().getPlayer());
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
@@ -54,7 +70,7 @@ public class EngineFlight implements Listener {
 		}
 		
 		boolean moved = false;
-		moved = moved || from.getWorld() == to.getWorld();
+		moved = moved || from.getWorld() != to.getWorld();
 		moved = moved || Math.abs(from.getBlockX()>>4 - to.getBlockX()>>4) > 0;
 		moved = moved || Math.abs(from.getBlockZ()>>4 - to.getBlockZ()>>4) > 0;
 		
@@ -63,7 +79,7 @@ public class EngineFlight implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerTeleport(PlayerTeleportEvent event) {
 		updatePlayerFlightStatus(event.getPlayer(), event.getTo());
 	}
@@ -82,7 +98,15 @@ public class EngineFlight implements Listener {
 		if (e.getCause() == DamageCause.FALL) {
 			if (fallingPlayers.contains(p)) {
 				e.setCancelled(true);
+			} else if (p.hasPermission("factionsflight.nofalldamage")) {
+				e.setCancelled(true);
 			}
+		}
+	}
+	
+	public void updateAllPlayersFlightStatus () {
+		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+			updatePlayerFlightStatus(player);
 		}
 	}
 	

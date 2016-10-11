@@ -7,3 +7,6 @@ permissions:
   factionsflight.bypass:
     description: "Bypass FactionsFlight"
     default: false
+  factionsflight.nofalldamage:
+    description: "Disable fall damage"
+    default: false
