@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,6 +16,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import com.massivecraft.factions.Rel;
 import com.massivecraft.factions.entity.BoardColl;
@@ -30,9 +32,14 @@ import com.massivecraft.massivecore.util.MUtil;
 
 public class EngineFlight implements Listener {
 	public static EngineFlight i = new EngineFlight();
-	public static Set<Player> fallingPlayers = new HashSet<Player>();
+	public static Set<OfflinePlayer> fallingPlayers = new HashSet<OfflinePlayer>();
 	public static EngineFlight get() {
 		return i;
+	}
+	
+	public static void init (JavaPlugin plugin) {
+		Bukkit.getPluginManager().registerEvents(EngineFlight.get(), plugin);
+		registerPermissions();
 	}
 	
 	public static void registerPermissions() {
@@ -119,7 +126,7 @@ public class EngineFlight implements Listener {
 			return;
 		}
 		
-		PS psChunk = PS.valueOf(location.getWorld().getName(), location.getBlockX()>>4, location.getBlockZ()>>4);
+		PS psChunk = PS.valueOf(location);
 		Faction faction = BoardColl.get().getFactionAt(psChunk);
 		MPlayer mplayer = MPlayer.get(player);
 		
